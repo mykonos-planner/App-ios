@@ -89,7 +89,7 @@ struct AdvisorView: View {
             if newMode == .ideas && ideas.isEmpty { regenerateIdeas() }
         }
         .onChange(of: store.garments.count) { _ in
-            ideas = []
+            if mode == .ideas { regenerateIdeas() } else { ideas = [] }
         }
         .sheet(isPresented: $showPicker) {
             GarmentPickerSheet(excludedIDs: Set(selection.map { $0.id })) { garment in

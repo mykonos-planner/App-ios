@@ -45,7 +45,7 @@ struct GarmentEditorView: View {
                 .padding(22)
             }
         }
-        .sheet(isPresented: $showCamera) {
+        .fullScreenCover(isPresented: $showCamera) {
             CameraPicker { image in
                 pickedImage = image
                 removeImage = false
