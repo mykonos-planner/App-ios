@@ -1,0 +1,77 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Xcode version
+        run: xcodebuild -version
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build app (unsigned)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project Atelier.xcodeproj \
+            -scheme Atelier \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            build 2>&1 | tee build.log
+
+      - name: Package unsigned .ipa
+        run: |
+          set -e
+          APP_PATH="build/Build/Products/Release-iphoneos/Atelier.app"
+          ls -la "$APP_PATH"
+          rm -rf Payload Atelier.ipa
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          zip -qry Atelier.ipa Payload
+          ls -lh Atelier.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Atelier-unsigned-ipa
+          path: Atelier.ipa
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+
+      - name: Publish release with the IPA
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: Atelier v1.0.${{ github.run_number }}
+          body: |
+            Build automatica dell'app **Atelier** (IPA non firmato, pronto per il sideload).
+
+            Per installarlo sull'iPad va firmato con il proprio Apple ID usando Sideloadly o AltStore.
+          files: Atelier.ipa

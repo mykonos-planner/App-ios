@@ -1,0 +1,68 @@
+name: Atelier
+
+options:
+  bundleIdPrefix: com.atelier
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "16.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+
+targets:
+  Atelier:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.atelier.wardrobe
+        PRODUCT_NAME: Atelier
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        TARGETED_DEVICE_FAMILY: "2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGNING_REQUIRED: "NO"
+        CODE_SIGNING_ALLOWED: "NO"
+        CODE_SIGN_IDENTITY: ""
+        DEVELOPMENT_TEAM: ""
+        SWIFT_OPTIMIZATION_LEVEL: "-O"
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Atelier
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        LSRequiresIPhoneOS: true
+        UIUserInterfaceStyle: Light
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        "UISupportedInterfaceOrientations~ipad":
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSCameraUsageDescription: "Atelier usa la fotocamera per fotografare i capi del tuo armadio. Le foto restano sul dispositivo."
+        NSPhotoLibraryUsageDescription: "Atelier accede alle foto per aggiungere i capi al tuo armadio. Nessuna immagine lascia il dispositivo."
+        ITSAppUsesNonExemptEncryption: false
+
+schemes:
+  Atelier:
+    build:
+      targets:
+        Atelier: all
+    run:
+      config: Debug
+    archive:
+      config: Release
